@@ -34,10 +34,13 @@ class Buscador:
         
         
         self.label = ttk.Label(self.root)
-        self.label.place(x=10,y=10)
+        self.label.place(x=10,y=40)
         
         self.text = ttk.Entry(self.root)
-        self.text.place(x=10,y=30,width=200)
+        self.text.place(x=10,y=60,width=200)
+
+        self.button = ttk.Button(self.cuerpo,command=self.match, text="Buscar")
+        self.button.place(x=80,y=80)
         
         self.information = ttk.Frame(self.root, style='rojo.TFrame' )
         self.information.place(x=0,y=0,height=28,width=1920)
@@ -55,12 +58,11 @@ class Buscador:
         
 
         
-        self.button = ttk.Button(self.cuerpo,command=self.match, text="Buscar")
-        self.button.place(x=80,y=50)
         
         
-        self.cuenta = ttk.Label(self.root, text="0")
-        self.cuenta.place(x=45,y=80)
+        
+        self.cuenta = ttk.Label(self.root, text="Coincidencias: 0")
+        self.cuenta.place(x=10,y=130)
         
         
         
@@ -70,7 +72,7 @@ class Buscador:
 
         # Crea el TreeView y configura su estilo
         self.tabla = ttk.Treeview(self.cuerpo, columns="resultado", style='yellow.TFrame')
-        self.tabla.place(x=10, y=120, height=800, width=900)
+        self.tabla.place(x=10, y=150, height=800, width=900)
 
         # Agrega las columnas y encabezados de columna
         self.tabla.heading("#0", text="Palabra Clave")
@@ -86,13 +88,13 @@ class Buscador:
             
             #Fin de Tabla 1
         self.label2=ttk.Label(text="Ruta")
-        self.label2.place(x=1500,y=29)
+        self.label2.place(x=1500,y=130)
 
         self.button3= ttk.Button(self.cuerpo,command=self.copyrow, text="--->")
-        self.button3.place(x=918,y=180)
+        self.button3.place(x=918,y=210)
             
         self.tabla2 = ttk.Treeview(self.cuerpo, columns="resultado", style='yellow.TFrame')
-        self.tabla2.place(x=1000, y=120, height=150, width=900)
+        self.tabla2.place(x=1000, y=150, height=150, width=900)
         
         self.tabla2.heading("#0", text="Palabra Clave")
         self.tabla2.column("#0", width=90)
@@ -100,11 +102,11 @@ class Buscador:
         self.tabla2.column("resultado", width=910)
             
         self.button3= ttk.Button(self.root,command=self.export_to_excel, text="Exporta a Excel")
-        self.button3.place(x=1000,y=280)
+        self.button3.place(x=1000,y=310)
         
     #Fin de Tabla 2
         self.datos = []
-        self.file_path=0
+        self.file_path=""
         
         self.root.mainloop()
         
@@ -112,6 +114,8 @@ class Buscador:
 
     def cargar(self):
         global curp  
+        self.datos = []
+        self.label2.config(text="Ruta")
         self.file_path = filedialog.askopenfilename()
         with open(self.file_path) as csvfile:
             csvreader = csv.reader(csvfile)
@@ -176,20 +180,30 @@ class Buscador:
 
     def exceltocsv(self):
         self.file_path = filedialog.askopenfilename()
-        save= os.getcwd() + "/" + "ArchviocsvGenerado.csv"
+        if self.file_path == "":
+            messagebox.showinfo("Information", "Proceso Cancelado")
+            return 0
         # creating or loading an excel workbook
         newWorkbook = openpyxl.load_workbook(self.file_path)
         # getting the active workbook sheet(Bydefault-->Sheet1)
         firstWorksheet = newWorkbook.active
         # Opening a output csv file in write mode
+        self.file_path=""
         self.file_path = filedialog.asksaveasfilename()
         self.file_path =self.file_path + ".csv"
+        if self.file_path == ".csv":
+            messagebox.showinfo("Information", "Proceso Cancelado")
+            return 0
         OutputCsvFile = csv.writer(open(self.file_path, 'w'), delimiter=";")
         # Traversing in each row of the worshsheet
         a=0
         for eachrow in firstWorksheet.rows:
             # Writing data of the excel file into the result csv file row-by-row
-            OutputCsvFile.writerow([cell.value for cell in eachrow])
+            try:
+                
+                OutputCsvFile.writerow([cell.value for cell in eachrow])
+            except Exception as e: print(e)
+
         with open(self.file_path) as csvfile:
             csvreader = csv.reader(csvfile)
             for row in csvreader:
@@ -223,9 +237,10 @@ class Buscador:
             #print(cadena)
             if dato in cadena :  # si el dato coincide con un elemento de la lista
                 campo1 = dato
+                ava = ava +1
                 valores.append(ban)
                 self.tabla.insert("", "end", text=campo1, values=(valores))
-                self.cuenta.config(text=ava) 
+                self.cuenta.config(text="coincidencias: " + str(ava)) 
                 valores = []
                     
                     
@@ -239,6 +254,7 @@ class Buscador:
         self.tabla.delete(*self.tabla.get_children())
         self.tabla2.delete(*self.tabla2.get_children())
         self.label2.config(text="Ruta")
+        self.cuenta.config(text="coincidencias: 0" ) 
         
 
 aplicacion1 = Buscador()
