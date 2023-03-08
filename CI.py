@@ -372,18 +372,18 @@ class Buscador:
             
             while varian > 0:
                 campo = ""
-                if len(campo3)>0:
+                if len(campo1)>0:
                     varian =3
-                    campo = campo3
-                    campo3=""
+                    campo = campo1
+                    campo1=""
                 elif len(campo2)>0:
                     varian =2
                     campo = campo2
                     campo2=""
-                elif len(campo1)>0:
+                elif len(campo3)>0:
                     varian =0
-                    campo = campo1
-                    campo1=""
+                    campo = campo3
+                    campo3=""
 
                 
                 campo = campo.lower()
