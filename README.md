@@ -10,4 +10,10 @@ Interfaz interactiva, herramienta de generación de archivos csv a partir de lib
 # Misión
 Generar Busquedas avanzadas a partir de palabras claves.
 
+# Visión 
+Herramienta de busqueda avanzda.
+Funcionamiento a traves de filtro de busqueda en palabras claves sobre cadena de texto.
+Implementar el uso en temas sociales, y para tener un control en base de datos.
+Implementar IA
+
 
