@@ -42,7 +42,7 @@ class Buscador:
         self.button = ttk.Button(self.cuerpo,command=self.match, text="Buscar")
         self.button.place(x=80,y=80)
         
-        self.information = ttk.Frame(self.root, style='rojo.TFrame' )
+        self.information = ttk.Frame(self.root, style='gris.TFrame' )
         self.information.place(x=0,y=0,height=28,width=1920)
         
         self.button2= ttk.Button(self.root,command=self.cargar, text="Cargar CSV")
@@ -134,14 +134,34 @@ class Buscador:
 
 
         #Configuracion de Filtros
-        self.dataframe =ttk.Frame(self.root,style='gris.TFrame')
-        self.dataframe.place(x=1000,y=200,height=450,width=800)
+        self.dataframe =ttk.Frame(self.root,style='gris.TFrame',borderwidth=3, relief="solid")
+        self.dataframe.place(x=1000,y=200,height=80,width=700)
+
+        self.avanzado=ttk.Label(self.root, text="Filtro Avanzado")
+        self.avanzado.place(x=1300,y=180)
 
         #Filtro 1
-        self.campo1label = ttk.Label(self.dataframe,text="Filtro 1")
-        self.campo1label.place(x=10,y=10)
+        self.campo1label = ttk.Label(self.dataframe,text="Campo 1",background='#DCDCDC')
+        self.campo1label.place(x=85,y=10)
         self.campo1=ttk.Entry(self.dataframe)
-        self.campo1.place(x=10,y=35,width=200)
+        self.campo1.place(x=10,y=30,width=200)
+        
+        #Filtro 2
+        self.campo2label = ttk.Label(self.dataframe,text="Campo 2",background='#DCDCDC')
+        self.campo2label.place(x=330,y=10)
+        self.campo2=ttk.Entry(self.dataframe)
+        self.campo2.place(x=250,y=30,width=200)
+
+        #Filtro 3
+        self.campo3label = ttk.Label(self.dataframe,text="Campo 3",background='#DCDCDC')
+        self.campo3label.place(x=560,y=10)
+        self.campo3=ttk.Entry(self.dataframe)
+        self.campo3.place(x=490,y=30,width=200)
+
+        self.buttonavanzado = ttk.Button(self.root,text="Busqueda Avanzada")
+        self.buttonavanzado.place(x=1300,y=300)
+
+       
 
 
             
