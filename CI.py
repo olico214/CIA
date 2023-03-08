@@ -218,11 +218,17 @@ class Buscador:
         global curp  
         self.datos = []
         self.label2.config(text="Ruta")
+        self.file_path=""
         self.file_path = filedialog.askopenfilename()
+        if self.file_path == "":
+            messagebox.showinfo("Information", "Proceso Cancelado") 
+            return 0
         with open(self.file_path) as csvfile:
             csvreader = csv.reader(csvfile)
             for row in csvreader:
-                self.datos.extend(row)
+                try:
+                    self.datos.extend(row)
+                except Exception as e: print(e)
         self.label2.config(text=self.file_path)
         messagebox.showinfo("Information", "Archivo cargado con exito")    
 
