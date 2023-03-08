@@ -20,8 +20,13 @@ class Buscador:
         
         
         style = ttk.Style()
-        style.configure('Blue.TFrame', background='blue')
-        style.configure('cuadro.TFrame', background="#D7E6E8")
+        style.configure('blue.TFrame', background="#D7E6E8")
+        style.configure('gris.TFrame', background="#DCDCDC")
+        style.configure('rojo.TFrame', background="#EC8F8F")
+        style.configure('yellow.TFrame', background="#F0E7AD")
+
+        
+        
         
         
         self.cuerpo= ttk.Frame(self.root)
@@ -34,24 +39,20 @@ class Buscador:
         self.text = ttk.Entry(self.root)
         self.text.place(x=10,y=30,width=200)
         
-        self.information = ttk.Frame(self.root, style='cuadro.TFrame' )
-        self.information.place(x=600,y=10,height=80,width=300)
+        self.information = ttk.Frame(self.root, style='rojo.TFrame' )
+        self.information.place(x=0,y=0,height=28,width=1920)
         
-        self.button2= ttk.Button(self.root,command=self.cargar, text="Cargar información")
-        self.button2.place(x=615,y=12)
-        
-        self.button3= ttk.Button(self.root,command=self.export_to_excel, text="Exporta a Excel")
-        self.button3.place(x=780,y=12)
+        self.button2= ttk.Button(self.root,command=self.cargar, text="Cargar CSV")
+        self.button2.place(x=450,y=1)
         
         self.button4= ttk.Button(self.root,command=self.exceltocsv, text="Excel to csv")
-        self.button4.place(x=615,y=50)
+        self.button4.place(x=530,y=1)
 
         self.button5= ttk.Button(self.root,command=self.resetvalues, text="Limpiar Campos")
-        self.button5.place(x=780,y=50)
+        self.button5.place(x=610,y=1)
 
 
-        self.label2=ttk.Label(text="Ruta")
-        self.label2.place(x=600,y=90)
+        
 
         
         self.button = ttk.Button(self.cuerpo,command=self.match, text="Buscar")
@@ -68,8 +69,8 @@ class Buscador:
         
 
         # Crea el TreeView y configura su estilo
-        self.tabla = ttk.Treeview(self.cuerpo, columns="resultado", style='cuadro.TFrame')
-        self.tabla.place(x=45, y=120, height=800, width=900)
+        self.tabla = ttk.Treeview(self.cuerpo, columns="resultado", style='yellow.TFrame')
+        self.tabla.place(x=10, y=120, height=800, width=900)
 
         # Agrega las columnas y encabezados de columna
         self.tabla.heading("#0", text="Palabra Clave")
@@ -84,18 +85,22 @@ class Buscador:
             
             
             #Fin de Tabla 1
-        self.button3= ttk.Button(self.cuerpo,command=self.copyrow, text="Guardar Datos")
-        self.button3.place(x=1000,y=90)
+        self.label2=ttk.Label(text="Ruta")
+        self.label2.place(x=1500,y=29)
+
+        self.button3= ttk.Button(self.cuerpo,command=self.copyrow, text="--->")
+        self.button3.place(x=918,y=180)
             
-        self.tabla2 = ttk.Treeview(self.cuerpo, columns="resultado", style='cuadro.TFrame')
-        self.tabla2.place(x=1000, y=120, height=150, width=1000)
+        self.tabla2 = ttk.Treeview(self.cuerpo, columns="resultado", style='yellow.TFrame')
+        self.tabla2.place(x=1000, y=120, height=150, width=900)
         
         self.tabla2.heading("#0", text="Palabra Clave")
         self.tabla2.column("#0", width=90)
-        self.tabla2.heading("resultado", text="Archivo")
+        self.tabla2.heading("resultado", text="Resultado")
         self.tabla2.column("resultado", width=910)
             
-        
+        self.button3= ttk.Button(self.root,command=self.export_to_excel, text="Exporta a Excel")
+        self.button3.place(x=1000,y=280)
         
     #Fin de Tabla 2
         self.datos = []
