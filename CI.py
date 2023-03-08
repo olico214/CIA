@@ -7,7 +7,7 @@ from openpyxl import Workbook
 from tkinter import messagebox
 import os
 import openpyxl
-
+import pyperclip
 
 
 
@@ -33,7 +33,7 @@ class Buscador:
         self.cuerpo.place(x=0,y=0,height=1080, width=1920)
         
         
-        self.label = ttk.Label(self.root)
+        self.label = ttk.Label(self.root,text="Palabra Clave")
         self.label.place(x=10,y=40)
         
         self.text = ttk.Entry(self.root)
@@ -47,12 +47,19 @@ class Buscador:
         
         self.button2= ttk.Button(self.root,command=self.cargar, text="Cargar CSV")
         self.button2.place(x=450,y=1)
+
+        
         
         self.button4= ttk.Button(self.root,command=self.exceltocsv, text="Excel to csv")
         self.button4.place(x=530,y=1)
 
+        
+
         self.button5= ttk.Button(self.root,command=self.resetvalues, text="Limpiar Campos")
         self.button5.place(x=610,y=1)
+
+        self.button3= ttk.Button(self.root,command=self.export_to_excel, text="Exporta a Excel")
+        self.button3.place(x=710,y=1)
 
 
         
@@ -68,6 +75,8 @@ class Buscador:
         
         
         
+
+        
         
 
         # Crea el TreeView y configura su estilo
@@ -80,37 +89,109 @@ class Buscador:
 
         self.tabla.heading("resultado", text="Resultado")
         self.tabla.column("resultado", width=910)    
-            
         
+
+        self.log=""
+
+        self.popup1 = tk.Menu(self.tabla, tearoff=0)
+        self.popup1.add_command(
+            command=self.your_copy,
+            label="Copy",
+            )
+        
+        self.popup2 = tk.Menu(self.tabla, tearoff=0)
+        self.popup2.add_command(
+            command=self.transfer,
+            label="Tranferir",
+            )
+        
+        self.tabla.bind('<Button-3>', self.popup_menu)
+        self.tabla.bind('<Button-1>', self.popup2_menu)
+        
+
         
             
             
             
             #Fin de Tabla 1
         self.label2=ttk.Label(text="Ruta")
-        self.label2.place(x=1500,y=130)
+        self.label2.place(x=1500,y=1)
 
         self.button3= ttk.Button(self.cuerpo,command=self.copyrow, text="--->")
-        self.button3.place(x=918,y=210)
+        self.button3.place(x=918,y=825)
             
         self.tabla2 = ttk.Treeview(self.cuerpo, columns="resultado", style='yellow.TFrame')
-        self.tabla2.place(x=1000, y=150, height=150, width=900)
+        self.tabla2.place(x=1000, y=750, height=150, width=900)
         
         self.tabla2.heading("#0", text="Palabra Clave")
         self.tabla2.column("#0", width=90)
         self.tabla2.heading("resultado", text="Resultado")
         self.tabla2.column("resultado", width=910)
+
+
+
+
+
+
+        #Configuracion de Filtros
+        self.dataframe =ttk.Frame(self.root,style='gris.TFrame')
+        self.dataframe.place(x=1000,y=200,height=450,width=800)
+
+        #Filtro 1
+        self.campo1label = ttk.Label(self.dataframe,text="Filtro 1")
+        self.campo1label.place(x=10,y=10)
+        self.campo1=ttk.Entry(self.dataframe)
+        self.campo1.place(x=10,y=35,width=200)
+
+
             
-        self.button3= ttk.Button(self.root,command=self.export_to_excel, text="Exporta a Excel")
-        self.button3.place(x=1000,y=310)
+        
         
     #Fin de Tabla 2
         self.datos = []
         self.file_path=""
         
         self.root.mainloop()
+
+
+    
         
 
+    def your_copy (self):
+        selections = self.tabla.selection()  # get hold of selected rows
+
+        copied_string = ""
+        for row in selections:
+            values = self.tabla.item(row, 'values')  # get values for each selected row
+
+            for item in values:
+                copied_string += f"{item}  "
+
+        pyperclip.copy(copied_string)
+
+    def popup_menu(self,event):
+        self.tabla.identify_row(event.y)
+        self.popup1.post(event.x_root, event.y_root)
+
+
+
+
+
+    def transfer(self):
+        selections = self.tabla.selection()  # get hold of selected rows
+
+        copied_string = ""
+        for row in selections:
+            value1 = self.tabla.item(row, 'values')  # get values for each selected row
+
+            #for item in values:
+                #copied_string += f"{item}  "
+
+        self.tabla2.insert("", "end", text=self.file_path, values=value1)
+        
+    def popup2_menu(self,event):
+        self.tabla.identify_row(event.y)
+        self.popup2.post(event.x_root, event.y_root)
 
     def cargar(self):
         global curp  
