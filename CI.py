@@ -312,6 +312,10 @@ class Buscador:
                 self.datos.extend(row)
 
         self.label2.config(text=self.file_path)
+        self.campo1.delete(0,'end')
+        self.campo2.delete(0,'end')
+        self.campo3.delete(0,'end')
+        self.text.delete(0,'end')
         messagebox.showinfo("Information", "Archivo cargado con exito") 
 
 
@@ -410,7 +414,7 @@ class Buscador:
         self.campo1.delete(0,'end')
         self.campo2.delete(0,'end')
         self.campo3.delete(0,'end')
-        
+        self.text.delete(0,'end')
 
 
 
