@@ -158,7 +158,7 @@ class Buscador:
         self.campo3=ttk.Entry(self.dataframe)
         self.campo3.place(x=490,y=30,width=200)
 
-        self.buttonavanzado = ttk.Button(self.root,text="Busqueda Avanzada")
+        self.buttonavanzado = ttk.Button(self.root,text="Busqueda Avanzada", command=self.filter1)
         self.buttonavanzado.place(x=1300,y=300)
 
        
@@ -170,6 +170,7 @@ class Buscador:
     #Fin de Tabla 2
         self.datos = []
         self.file_path=""
+        self.valores = []
         
         self.root.mainloop()
 
@@ -348,14 +349,73 @@ class Buscador:
                     
             
                 
+    def filter1(self):
+        try:
+            campo1 = self.campo1.get()
+            campo2 = self.campo2.get()
+            campo3 = self.campo3.get()
+            
+
+            if campo1 == "":
+                return 0
+            varian = 3
+            
+            while varian > 0:
+                campo = ""
+                if len(campo3)>0:
+                    varian =3
+                    campo = campo3
+                    campo3=""
+                elif len(campo2)>0:
+                    varian =2
+                    campo = campo2
+                    campo2=""
+                elif len(campo1)>0:
+                    varian =0
+                    campo = campo1
+                    campo1=""
+
+                
+                campo = campo.lower()
                 
                 
+                self.cuenta.config(text="coincidencias: 0" )
+                ava = 0
+                valores = []
+                valor = []
+                for row_id in self.tabla.get_children():
+                    valor.extend( self.tabla.item(row_id)["values"])
+                self.tabla.delete(*self.tabla.get_children())    
+                for ban in valor:
+                    
+                    ban = ban.lower()
+                    if campo in ban:
+
+                        ava = ava +1
+                        valores.append(ban)
+                        self.tabla.insert("", "end", text=campo, values=(valores))
+                        self.cuenta.config(text="coincidencias: " + str(ava)) 
+                        valores = []
+                #self.tabla.delete(*self.tabla.get_children())
+        except:        
+            print("Proceso no valido")
+
+                        
     def resetvalues(self):
         self.datos = []
         self.tabla.delete(*self.tabla.get_children())
         self.tabla2.delete(*self.tabla2.get_children())
         self.label2.config(text="Ruta")
         self.cuenta.config(text="coincidencias: 0" ) 
+        self.campo1.delete(0,'end')
+        self.campo2.delete(0,'end')
+        self.campo3.delete(0,'end')
         
+
+
+
+        
+
+            
 
 aplicacion1 = Buscador()
