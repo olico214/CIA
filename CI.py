@@ -430,28 +430,34 @@ class Buscador:
     def convertbyt(self):
 
         s = "ABC"
-        data = []
         result = ' '.join(format(c, 'b') for c in bytearray(s, "utf-8"))
         
         root = []
         word = ""
+
         for item in self.tabla2.get_children():
             values = []
             
             
             for value in self.tabla2.item(item)['values']:
+                
                 for ban in value:
-                    result = ' '.join(format(c, 'b') for c in bytearray(ban, "utf-8")) 
+                    
+                    result = ban
                     if ban != ";":
                         
                         word = word + result 
                         
                     else:
-                        root.append (word)
-                        word = ""
-
-            input(root)
-                
+                        
+                        result = ' '.join(format(x, 'b') for x in bytearray(word, 'utf-8'))
+                        
+                        values.append(result)
+                        word=""
+                        result = ""
+                    #input(word)
+                print(values)
+                root = []
             
             
             #data.append(values)
