@@ -53,13 +53,13 @@ class Buscador:
         self.button4= ttk.Button(self.root,command=self.exceltocsv, text="Excel to csv")
         self.button4.place(x=530,y=1)
 
-        
-
         self.button5= ttk.Button(self.root,command=self.resetvalues, text="Limpiar Campos")
         self.button5.place(x=610,y=1)
 
         self.button3= ttk.Button(self.root,command=self.export_to_excel, text="Exporta a Excel")
         self.button3.place(x=710,y=1)
+
+        
 
 
         
@@ -127,6 +127,10 @@ class Buscador:
         self.tabla2.column("#0", width=90)
         self.tabla2.heading("resultado", text="Resultado")
         self.tabla2.column("resultado", width=910)
+
+
+        self.button6= ttk.Button(self.root,command=self.convertbyt, text="Analizar IA")
+        self.button6.place(x=1800,y=720)
 
 
 
@@ -422,6 +426,38 @@ class Buscador:
         self.campo3.delete(0,'end')
         self.text.delete(0,'end')
 
+
+    def convertbyt(self):
+
+        s = "ABC"
+        data = []
+        result = ' '.join(format(c, 'b') for c in bytearray(s, "utf-8"))
+        
+        root = []
+        word = ""
+        for item in self.tabla2.get_children():
+            values = []
+            
+            
+            for value in self.tabla2.item(item)['values']:
+                for ban in value:
+                    result = ' '.join(format(c, 'b') for c in bytearray(ban, "utf-8")) 
+                    if ban != ";":
+                        
+                        word = word + result 
+                        
+                    else:
+                        root.append (word)
+                        word = ""
+
+            input(root)
+                
+            
+            
+            #data.append(values)
+
+
+       
 
 
         
