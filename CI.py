@@ -7,6 +7,7 @@ import csv
 from openpyxl import Workbook
 import openpyxl
 import pyperclip
+import os
 
 
 
@@ -175,6 +176,7 @@ class Buscador:
         self.datos = []
         self.file_path=""
         self.valores = []
+        self.ruta = []
         
         self.root.mainloop()
 
@@ -222,19 +224,23 @@ class Buscador:
         global curp  
         self.datos = []
         self.label2.config(text="Ruta")
-        self.file_path=""
-        self.file_path = filedialog.askopenfilename()
-        if self.file_path == "":
+        file_paths = filedialog.askopenfilenames()
+        if not file_paths:
             messagebox.showinfo("Information", "Proceso Cancelado") 
             return 0
-        with open(self.file_path) as csvfile:
-            csvreader = csv.reader(csvfile)
-            for row in csvreader:
-                try:
-                    self.datos.extend(row)
-                except Exception as e: print(e)
-        self.label2.config(text=self.file_path)
-        messagebox.showinfo("Information", "Archivo cargado con exito")    
+        for file_path in file_paths:
+            with open(file_path) as csvfile:
+                csvreader = csv.reader(csvfile)
+                file_name = os.path.basename(file_path)
+                for row in csvreader:
+                    try:
+                        row_str = ",".join(row)
+                        self.datos.append(file_name + "-" + row_str)
+                    except Exception as e:
+                        print(e)
+        file_names = [os.path.basename(file_path) for file_path in file_paths]
+        self.label2.config(text=", ".join(file_names))
+        messagebox.showinfo("Information", "Archivos cargados con exito")
 
                         
                         
