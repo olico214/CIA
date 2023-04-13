@@ -8,6 +8,9 @@ from openpyxl import Workbook
 import openpyxl
 import pyperclip
 import os
+import bitstring
+import numpy as np
+import pandas as pd
 
 
 
@@ -435,35 +438,45 @@ class Buscador:
 
     def convertbyt(self):
 
-        s = "ABC"
-        result = ' '.join(format(c, 'b') for c in bytearray(s, "utf-8"))
-        
         root = []
-        word = ""
-
         for item in self.tabla2.get_children():
             values = []
-            
-            
             for value in self.tabla2.item(item)['values']:
-                
-                for ban in value:
-                    
-                    result = ban
-                    if ban != ";":
-                        
-                        word = word + result 
-                        
-                    else:
-                        
-                        result = ' '.join(format(x, 'b') for x in bytearray(word, 'utf-8'))
-                        
-                        values.append(result)
-                        word=""
-                        result = ""
-                    #input(word)
-                print(values)
-                root = []
+                if value == ";":
+                    values.append(value)
+                else:
+                    result = bitstring.BitArray(bytes=value.encode('utf-8'))
+                    values.append(result.bin)
+            root.append(tuple(values))
+        print(root)
+        # Crear dataframe a partir de los datos de la tabla
+        df = pd.DataFrame(root)
+
+        # Definir las columnas con los datos generales que se quieren analizar (nombre y domicilio)
+        data_columns = [1, 2]
+
+        # Separar los datos generales en un nuevo dataframe
+        X = df[data_columns].values
+
+        # Crear una etiqueta para cada fila (esto podría ser útil si luego quieres clasificar los datos por etiquetas)
+        y = np.arange(len(df))
+
+        # Crear modelo de redes neuronales
+        clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+
+        # Entrenar el modelo con los datos generales y las etiquetas
+        clf.fit(X, y)
+
+        # Predecir las etiquetas para cada fila de datos
+        labels = clf.predict(X)
+
+        # Imprimir los datos con sus etiquetas correspondientes
+        for i in range(len(df)):
+            print("Etiqueta:", labels[i])
+            print("Datos:", df.iloc[i].values)
+            print()
+
+        
             
             
             #data.append(values)
