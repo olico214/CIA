@@ -11,6 +11,8 @@ import os
 import bitstring
 import numpy as np
 import pandas as pd
+from sklearn.neural_network import MLPClassifier
+import pandas as pd
 
 
 
@@ -133,8 +135,8 @@ class Buscador:
         self.tabla2.column("resultado", width=910)
 
 
-        self.button6= ttk.Button(self.root,command=self.convertbyt, text="Analizar IA")
-        self.button6.place(x=1800,y=720)
+        #self.button6= ttk.Button(self.root,command=self.convertbyt, text="Analizar IA")
+        #self.button6.place(x=1800,y=720)
 
 
 
@@ -238,7 +240,7 @@ class Buscador:
                 for row in csvreader:
                     try:
                         row_str = ",".join(row)
-                        self.datos.append(file_name + "-" + row_str)
+                        self.datos.append(file_name + ">" + row_str)
                     except Exception as e:
                         print(e)
         file_names = [os.path.basename(file_path) for file_path in file_paths]
@@ -437,56 +439,69 @@ class Buscador:
 
 
     def convertbyt(self):
+       # Seleccionar archivo(s) con el cuadro de diálogo de selección de archivos
+        file_paths = filedialog.askopenfilenames()
 
+        # Si no se ha seleccionado ningún archivo, mostrar un mensaje informativo y terminar el programa
+        if not file_paths:
+            messagebox.showinfo("Información", "Proceso cancelado.") 
+            exit()
+
+        # Procesar cada archivo seleccionado
         root = []
-        for item in self.tabla2.get_children():
-            values = []
-            for value in self.tabla2.item(item)['values']:
-                if value == ";":
-                    values.append(value)
-                else:
-                    result = bitstring.BitArray(bytes=value.encode('utf-8'))
-                    values.append(result.bin)
-            root.append(tuple(values))
-        print(root)
-        # Crear dataframe a partir de los datos de la tabla
+        identificadores = {}
+        indice = 0
+        for file_path in file_paths:
+            df = pd.read_excel(file_path)
+            columna1 = df['Nombre'].values
+            columna2 = df['Calle'].values
+            for i in range(len(columna1)):
+                root.append([columna1[i], columna2[i]])
+                identificadores[indice] = columna1[i]
+                indice += 1
+
+        # Entrenar la IA
+
         df = pd.DataFrame(root)
-
-        # Definir las columnas con los datos generales que se quieren analizar (nombre y domicilio)
-        data_columns = [1, 2]
-
-        # Separar los datos generales en un nuevo dataframe
+        input()
+        data_columns = ['Nombre', 'Calle']
+        input()
         X = df[data_columns].values
-
-        # Crear una etiqueta para cada fila (esto podría ser útil si luego quieres clasificar los datos por etiquetas)
         y = np.arange(len(df))
-
-        # Crear modelo de redes neuronales
         clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
-
-        # Entrenar el modelo con los datos generales y las etiquetas
         clf.fit(X, y)
 
-        # Predecir las etiquetas para cada fila de datos
-        labels = clf.predict(X)
-
-        # Imprimir los datos con sus etiquetas correspondientes
+        # Obtener resultados de la IA para cada fila del archivo
         for i in range(len(df)):
-            print("Etiqueta:", labels[i])
-            print("Datos:", df.iloc[i].values)
+            # Obtener los datos de la fila actual
+            datos_actuales = df.iloc[i].values
+            
+            # Buscar coincidencias con los datos de la fila actual
+            coincidencias = []
+            for j in range(len(df)):
+                # Saltar la fila actual
+                if i == j:
+                    continue
+                
+                # Comprobar si hay coincidencia en los datos
+                datos_comparar = df.iloc[j].values
+                if np.array_equal(datos_actuales, datos_comparar):
+                    coincidencias.append(identificadores[j])
+            
+            # Mostrar resultados
+            print("Etiqueta:", identificadores[i])
+            print("Datos:", datos_actuales)
+            if len(coincidencias) > 0:
+                print("Coincidencias:", coincidencias)
             print()
 
-        
-            
-            
-            #data.append(values)
 
 
-       
+                    
 
 
-        
+                        
 
-            
+                            
 
 aplicacion1 = Buscador()
